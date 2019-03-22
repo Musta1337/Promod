@@ -13,7 +13,6 @@ namespace Promod
         public Promod() : base()
         {
             #region Initializing Dvars
-            Call("setDvarifUninitialized", "sv_promodColorScoreBoard", "1");
             Call("setDvarifUninitialized", "sv_promodNormalKillcam", "1");
             Call("setDvarifUninitialized", "sv_promodNoSentry", "1");
             Call("setDvarifUninitialized", "sv_promodNoGernadeThrowBack", "1");
