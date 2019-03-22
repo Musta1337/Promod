@@ -1,0 +1,8 @@
+C:\Users\musta\source\repos\Promod\Promod\bin\Debug\Promod.dll
+C:\Users\musta\source\repos\Promod\Promod\bin\Debug\Promod.pdb
+C:\Users\musta\source\repos\Promod\Promod\bin\Debug\InfinityScript.dll
+C:\Users\musta\source\repos\Promod\Promod\obj\Debug\Promod.csproj.CoreCompileInputs.cache
+C:\Users\musta\source\repos\Promod\Promod\obj\Debug\Promod.csproj.CopyComplete
+C:\Users\musta\source\repos\Promod\Promod\obj\Debug\Promod.dll
+C:\Users\musta\source\repos\Promod\Promod\obj\Debug\Promod.pdb
+C:\Users\musta\source\repos\Promod\Promod\obj\Debug\Promod.csprojAssemblyReference.cache
