@@ -53,6 +53,9 @@ To configure the Promod script, do the following steps:
    // Toggle Server performance Dvars
    seta sv_NESVDvar "1"
    
+   //Removes annoying announcer. 1 to enable, 0 to disable
+   seta sv_NERemoveAnnouncer "1"
+   
    ////////////////////////////////////////////
    ```
 3. Save the config.
@@ -73,8 +76,20 @@ There are Total 9 settings in the current build of Promod script, as given:
 - sv_NEMotd
 - sv_NEObjectiveText
 - sv_NESVDvar
+- sv_NERemoveAnnouncer
 
 ## Contact
 You can contact me on my Discord server. https://discord.gg/HFTXzTw
 
 Discord: Musta#6382
+
+## Change Logs
+
+### v1.0.0.0 
+Initial Release.
+
+### v1.0.0.1
+1. Fixed r_normalMap
+2. Added sv_NERemoveANnouncer
+3. Removed Ammo and other warning messages.
+4. Changes to way the dvars are loaded for client.

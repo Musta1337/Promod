@@ -22,6 +22,7 @@ namespace Promod
             Call("setDvarifUninitialized", "sv_NEAlliesName", "^1:thonk:");
             Call("setDvarifUninitialized", "sv_NEAxisName", "^::monkaS:");
             Call("setDvarifUninitialized", "sv_NESVDvar", "1");
+            Call("setDvarifUninitialized", "sv_NERemoveAnnouncer", "1");
             Log.Info("Dvars Initialized.");
             #endregion
 
@@ -177,36 +178,47 @@ namespace Promod
 
         public void OnPlayerConnecting(Entity player)
         {
+            player.SetClientDvar("lowAmmoWarningColor1", "0 0 0 0");
+            player.SetClientDvar("lowAmmoWarningColor2", "0 0 0 0");
+            player.SetClientDvar("lowAmmoWarningNoAmmoColor1", "0 0 0 0");
+            player.SetClientDvar("lowAmmoWarningNoAmmoColor2", "0 0 0 0");
+            player.SetClientDvar("lowAmmoWarningNoReloadColor1", "0 0 0 0");
+            player.SetClientDvar("lowAmmoWarningNoReloadColor2", "0 0 0 0");
             player.SetClientDvar("useRelativeTeamColors", "1");
             player.SetClientDvar("cg_crosshairEnemyColor", "0");
             player.SetClientDvar("cg_drawcrosshairnames", "0");
             player.SetClientDvar("cg_brass", "0");
             player.SetClientDvar("r_distortion", "0");
             player.SetClientDvar("r_dlightlimit", "0");
-            player.SetClientDvar("r_normalMap", "1");
+            player.SetClientDvar("r_normalMap", "Flat");
             player.SetClientDvar("r_fog", "0");
             player.SetClientDvar("r_fastskin", "0");
+            player.SetClientDvar("snaps", "30");
             player.SetClientDvar("r_drawdecals", "1");
             player.SetClientDvar("clientsideeffects", "0");
             player.SetClientDvar("fx_draw", "1");
             player.SetClientDvar("sys_lockThreads", "all");
             player.SetClientDvar("cl_maxpackets", "100");
+            if (Call<int>("getDvarInt", "sv_NERemoveAnnouncer") != 0) { player.SetClientDvar("snd_enableStream", "0"); }
             player.SetClientDvar("ragdoll_enable", "0");
             player.SetClientDvar("waypointIconHeight", "13");
             player.SetClientDvar("waypointIconWidth", "13");
             player.SetClientDvar("g_teamname_allies", Call<string>("getDvar", "sv_NEAlliesName"));
             player.SetClientDvar("g_teamname_axis", Call<string>("getDvar", "sv_NEAxisName"));
-            player.SetClientDvar("bg_weaponBobMax", "0");
-            player.SetClientDvar("bg_viewBobMax", "0");
-            player.SetClientDvar("bg_viewBobAmplitudeStandingAds", "0 0");
-            player.SetClientDvar("bg_viewBobAmplitudeSprinting", "0 0");
-            player.SetClientDvar("bg_viewBobAmplitudeDucked", "0 0");
-            player.SetClientDvar("bg_viewBobAmplitudeDuckedAds", "0 0");
-            player.SetClientDvar("bg_viewBobAmplitudeProne", "0 0");
-            player.SetClientDvar("bg_viewKickRandom", "0.2");
-            player.SetClientDvar("bg_viewKickMin", "1");
-            player.SetClientDvar("bg_viewKickScale", "0.15");
-            player.SetClientDvar("bg_viewKickMax", "75");
+            AfterDelay(500, () =>
+            {
+                player.SetClientDvar("bg_weaponBobMax", "0");
+                player.SetClientDvar("bg_viewBobMax", "0");
+                player.SetClientDvar("bg_viewBobAmplitudeStandingAds", "0 0");
+                player.SetClientDvar("bg_viewBobAmplitudeSprinting", "0 0");
+                player.SetClientDvar("bg_viewBobAmplitudeDucked", "0 0");
+                player.SetClientDvar("bg_viewBobAmplitudeDuckedAds", "0 0");
+                player.SetClientDvar("bg_viewBobAmplitudeProne", "0 0");
+                player.SetClientDvar("bg_viewKickRandom", "0.2");
+                player.SetClientDvar("bg_viewKickMin", "1");
+                player.SetClientDvar("bg_viewKickScale", "0.15");
+                player.SetClientDvar("bg_viewKickMax", "75");
+            });
         }
 
         #region Nade Damage Changing.
@@ -445,6 +457,10 @@ namespace Promod
                     }
                     Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^1Usage^0: ^:!dlightlimit <0-1>");
                     return EventEat.EatGame;
+                }
+                if (msg[0].StartsWith("!version"))
+                {
+                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:Promod Script ^;v1.0.0.1 ^:by ^1Musta^0.");
                 }
             }
             catch (Exception)
