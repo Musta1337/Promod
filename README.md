@@ -75,5 +75,6 @@ There are Total 9 settings in the current build of Promod script, as given:
 - sv_NESVDvar
 
 ## Contact
-You can contact me on my Discord server. (https://discord.gg/HFTXzTw)[here]
+You can contact me on my Discord server. https://discord.gg/HFTXzTw
+
 Discord: Musta#6382
