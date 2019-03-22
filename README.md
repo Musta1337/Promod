@@ -89,7 +89,7 @@ Discord: Musta#6382
 Initial Release.
 
 ### v1.0.0.1
-1. Fixed r_normalMap
-2. Added sv_NERemoveANnouncer
+1. Fixed r_normalMap.
+2. Added sv_NERemoveAnnouncer.
 3. Removed Ammo and other warning messages.
 4. Changes to way the dvars are loaded for client.
