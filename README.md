@@ -93,3 +93,12 @@ Initial Release.
 2. Added sv_NERemoveAnnouncer.
 3. Removed Ammo and other warning messages.
 4. Changes to way the dvars are loaded for client.
+
+#### v1.0.0.2
+1. Added several commands:
+   - !version
+   - !gunx (cg_gun_x)
+   - !guny (cg_gun_y)
+   - !gunz (cg_gun_z)
+2. Fixed perks management.
+3. Fixed chat bug.

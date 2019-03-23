@@ -12,6 +12,7 @@ namespace Promod
     {
         public Promod() : base()
         {
+            Log.Info("Promod script by Musta. Discord: Musta#6382");
             #region Initializing Dvars
             Call("setDvarifUninitialized", "sv_promodNormalKillcam", "1");
             Call("setDvarifUninitialized", "sv_promodNoSentry", "1");
@@ -37,7 +38,6 @@ namespace Promod
             PlayerConnecting += OnPlayerConnecting;
             #endregion
 
-            Log.Info("Promod script by Musta. Discord: Musta#6382");
         }
 
         public void PromodSettings()
@@ -92,7 +92,7 @@ namespace Promod
             }
             Call("setdvar", "scr_showperksonspawn", "0");
             Utilities.ExecuteCommand("set ui_hud_showdeathicons 0");
-            Utilities.ExecuteCommand("set scr_game_matchstarttime 5");
+            Utilities.ExecuteCommand("set scr_game_matchstarttime 7");
             Utilities.ExecuteCommand("set scr_game_playerwaittime 3");
             Utilities.ExecuteCommand("set scr_sd_planttime 5");
             Utilities.ExecuteCommand("set scr_sd_defusetime 7.5");
@@ -133,9 +133,12 @@ namespace Promod
         {
             player.SetClientDvar("cg_objectiveText", Call<String>("getDvar", "sv_NEObjectiveText"));
             player.Call("clearperks");
-            player.SetClientDvar("perk_sprintMultiplier", "1.35");
-            player.SetClientDvar("perk_bulletPenetrationMultiplier", "1.8");
-            player.SetClientDvar("perk_quickDrawSpeedScale", "1.2");
+            if(player.Call<int>("hasperk", "specialty_reducedsway") == 0)
+            {
+                player.SetPerk("specialty_bulletaccuracy", true, false);
+                player.SetPerk("specialty_reducedsway", true, false);
+                player.SetPerk("specialty_coldblooded", true, false);
+            }
             player.Call("GiveMaxAmmo", player.CurrentWeapon);
             if (player.HasWeapon("flash_grenade_mp"))
             {
@@ -167,6 +170,12 @@ namespace Promod
             {
                 player.SetClientDvar("cg_objectiveText", Call<String>("getDvar", "sv_NEObjectiveText"));
                 player.Call("clearperks");
+                if (player.Call<int>("hasperk", "specialty_reducedsway") == 0)
+                {
+                    player.SetPerk("specialty_bulletaccuracy", true, false);
+                    player.SetPerk("specialty_reducedsway", true, false);
+                    player.SetPerk("specialty_coldblooded", true, false);
+                }
                 player.Call("GiveMaxAmmo", player.CurrentWeapon);
                 if (player.HasWeapon("flash_grenade_mp"))
                 {
@@ -460,7 +469,49 @@ namespace Promod
                 }
                 if (msg[0].StartsWith("!version"))
                 {
-                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:Promod Script ^;v1.0.0.1 ^:by ^1Musta^0.");
+                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:Promod Script ^;v1.0.0.2 ^:by ^1Musta^0.");
+                    return EventEat.EatGame;
+                }
+                if (msg[0].StartsWith("!gunx"))
+                {
+                    string arg = msg[1];
+                    if (arg != "")
+                    {
+                        player.SetClientDvar("cg_gun_x", arg);
+                        Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:cg_gun_x ^;" + arg + " ^:has been applied.");
+                        return EventEat.EatGame;
+                    }
+                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^1Usage^0: ^:!gunx <value>");
+                    return EventEat.EatGame;
+                }
+                if (msg[0].StartsWith("!guny"))
+                {
+                    string arg = msg[1];
+                    if (arg != "")
+                    {
+                        player.SetClientDvar("cg_gun_y", arg);
+                        Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:cg_gun_y ^;" + arg + " ^:has been applied.");
+                        return EventEat.EatGame;
+                    }
+                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^1Usage^0: ^:!guny <value>");
+                    return EventEat.EatGame;
+                }
+                if (msg[0].StartsWith("!gunz"))
+                {
+                    string arg = msg[1];
+                    if (arg != "")
+                    {
+                        player.SetClientDvar("cg_gun_z", arg);
+                        Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:cg_gun_z ^;" + arg + " ^:has been applied.");
+                        return EventEat.EatGame;
+                    }
+                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^1Usage^0: ^:!gunz <value>");
+                    return EventEat.EatGame;
+                }
+                if (msg[0].StartsWith("!help"))
+                {
+                    Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:!ft, !fovscale, !gunx, !guny, !gunz, !detail, !distortion, !version, !fog, !dlightlimit");
+                    return EventEat.EatGame;
                 }
             }
             catch (Exception)
