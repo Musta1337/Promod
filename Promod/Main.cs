@@ -514,8 +514,9 @@ namespace Promod
                     return EventEat.EatGame;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error($"Error in OnSay2: {ex}");
             }
             return EventEat.EatNone;
         }
