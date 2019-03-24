@@ -24,10 +24,15 @@ namespace Promod
             Call("setDvarifUninitialized", "sv_NEAxisName", "^::monkaS:");
             Call("setDvarifUninitialized", "sv_NESVDvar", "1");
             Call("setDvarifUninitialized", "sv_NERemoveAnnouncer", "1");
+            Call("setDvarifUninitialized", "sv_AceBalance", "1");
             Log.Info("Dvars Initialized.");
             #endregion
 
             #region Settings
+            if (Call<int>("getDvarInt", "sv_AceBalance") != 0) 
+            {
+                OnNotify("game_over", new Action(AceBalance));
+            }
             Breath();
             PromodSettings();
             Log.Info("Promod Settings Loaded.");
@@ -229,6 +234,96 @@ namespace Promod
                 player.SetClientDvar("bg_viewKickMax", "75");
             });
         }
+
+
+        #region AceBalance
+        public static bool TeamsGame(string GT)
+        {
+            switch (GT)
+            {
+                case "war":
+                case "sd":
+                case "sab":
+                case "dom":
+                case "koth":
+                case "ctf":
+                case "dd":
+                case "tdef":
+                case "conf":
+                case "grnd":
+                case "tjugg":
+                return true;
+                case "infect":
+                case "dm":
+                case "jugg":
+                case "gun":
+                case "oic":
+                return false;
+                default:
+                return false;
+             }
+         }
+        public void SetTeam(Entity balancedPlayer, string NT)
+        {
+            try
+            {
+                balancedPlayer.SetField("sessionteam", NT);
+                balancedPlayer.SetField("team", NT);
+                balancedPlayer.Notify("menuresponse", "team_marinesopfor", NT);
+            }
+            catch (Exception ex)
+            {
+              Log.Debug(ex.ToString());
+            }
+         }
+        public void AceBalance()
+        {
+           try
+           {
+              string GT = Call<string>("getdvar", "g_gametype");
+              if (!TeamsGame(GT))
+              {
+               return;
+              }
+              List<Entity> FirstTeam = new List<Entity>();
+              List<Entity> SecondTeam = new List<Entity>();
+              foreach (Entity player in Players)
+              {
+                if (player.GetField<string>("sessionteam") == "allies")
+                {
+                    SecondTeam.Add(player);
+                }
+                if (player.GetField<string>("sessionteam") == "axis")
+                {
+                    FirstTeam.Add(player);
+                }
+              }
+              int difference = Math.Abs(FirstTeam.Count - SecondTeam.Count) / 2;
+              if (SecondTeam.Count > FirstTeam.Count)
+              {
+                  List<Entity> list = SecondTeam.OrderBy((balancedPlayerKills => balancedPlayerKills.GetField<int>("kills"))).ToList();
+                  for (int index = 0; index < difference; ++index)
+                  {
+                      SetTeam(list[index], "axis");
+                  }
+                  Utilities.RawSayAll("^5Teams ^1Balanced!");
+              }
+              else
+              {
+                  List<Entity> list = FirstTeam.OrderBy((balancedPlayerKills => balancedPlayerKills.GetField<int>("kills"))).ToList();
+                  for (int index = 0; index < difference; ++index)
+                  {
+                      SetTeam(list[index], "allies");
+                  }
+                  Utilities.RawSayAll("^5Teams ^1Balanced!");
+              }
+           }
+           catch (Exception ex)
+           {
+           Log.Debug(ex.ToString());
+           }
+        }
+        #endregion
 
         #region Nade Damage Changing.
 
