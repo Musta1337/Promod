@@ -56,8 +56,8 @@ To configure the Promod script, do the following steps:
    //Removes annoying announcer. 1 to enable, 0 to disable
    seta sv_NERemoveAnnouncer "1"
    
-   //Enables Auto Balance At End Of The Map
-   seta sv_AceBalance "1"
+   //Enables Auto Balance.
+   seta sv_NEAutoBalance "1"
    ////////////////////////////////////////////
    ```
 3. Save the config.
@@ -79,7 +79,7 @@ There are Total 9 settings in the current build of Promod script, as given:
 - sv_NEObjectiveText
 - sv_NESVDvar
 - sv_NERemoveAnnouncer
-- sv_AceBalance 
+- sv_NEAutoBalance
 ## Contact
 You can contact me on my Discord server. https://discord.gg/HFTXzTw
 
