@@ -24,14 +24,14 @@ namespace Promod
             Call("setDvarifUninitialized", "sv_NEAxisName", "^::monkaS:");
             Call("setDvarifUninitialized", "sv_NESVDvar", "1");
             Call("setDvarifUninitialized", "sv_NERemoveAnnouncer", "1");
-            Call("setDvarifUninitialized", "sv_AceBalance", "1");
+            Call("setDvarifUninitialized", "sv_NEAutoBalance", "1");
             Log.Info("Dvars Initialized.");
             #endregion
 
             #region Settings
-            if (Call<int>("getDvarInt", "sv_AceBalance") != 0) 
+            if (Call<int>("getDvarInt", "sv_NEAutoBalance") != 0) 
             {
-                OnNotify("game_over", new Action(AceBalance));
+                OnNotify("game_over", () => { AutoBalance(); });
             }
             Breath();
             PromodSettings();
@@ -236,7 +236,7 @@ namespace Promod
         }
 
 
-        #region AceBalance
+        #region Auto Balance
         public static bool TeamsGame(string GT)
         {
             switch (GT)
@@ -268,15 +268,14 @@ namespace Promod
             try
             {
                 balancedPlayer.SetField("sessionteam", NT);
-                balancedPlayer.SetField("team", NT);
                 balancedPlayer.Notify("menuresponse", "team_marinesopfor", NT);
             }
             catch (Exception ex)
             {
-              Log.Debug(ex.ToString());
+              Log.Error($"Error in Setting team: {ex}");
             }
          }
-        public void AceBalance()
+        public void AutoBalance()
         {
            try
            {
@@ -306,7 +305,7 @@ namespace Promod
                   {
                       SetTeam(list[index], "axis");
                   }
-                  Utilities.RawSayAll("^5Teams ^1Balanced!");
+                  Utilities.RawSayAll("^0[^1Promod^0]: ^:Teams has been balanced.");
               }
               else
               {
@@ -315,12 +314,12 @@ namespace Promod
                   {
                       SetTeam(list[index], "allies");
                   }
-                  Utilities.RawSayAll("^5Teams ^1Balanced!");
+                  Utilities.RawSayAll("^0[^1Promod^0]: ^:Teams has been balanced.");
               }
            }
            catch (Exception ex)
            {
-           Log.Debug(ex.ToString());
+           Log.Error($"Error in Auto Balance: {ex}");
            }
         }
         #endregion
