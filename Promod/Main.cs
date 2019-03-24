@@ -100,6 +100,7 @@ namespace Promod
             Utilities.ExecuteCommand("set scr_game_matchstarttime 7");
             Utilities.ExecuteCommand("set scr_game_playerwaittime 3");
             Utilities.ExecuteCommand("set scr_sd_planttime 5");
+            Utilities.ExecuteCommand("set g_deadChat 1");
             Utilities.ExecuteCommand("set scr_sd_defusetime 7.5");
             Call("setdvar", "sv_clientSideBullets", "0");
             Call("setdvar", "glass_DamageToDestroy", "50");
@@ -349,13 +350,12 @@ namespace Promod
         #endregion
 
         #region Commands
-
         public override EventEat OnSay3(Entity player, ChatType type, string name, ref string message)
         {
-            try
+            string mess = message.ToLower();
+            string[] msg = mess.Split(' ');
+            if (msg[0].StartsWith("!"))
             {
-                message = message.ToLower();
-                string[] msg = message.Split(' ');
                 if (msg[0].StartsWith("!ft"))
                 {
                     string arg = msg[1];
@@ -607,13 +607,11 @@ namespace Promod
                     Utilities.RawSayTo(player, "^0[^1PROMOD^0]: ^:!ft, !fovscale, !gunx, !guny, !gunz, !detail, !distortion, !version, !fog, !dlightlimit");
                     return EventEat.EatGame;
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error in OnSay2: {ex}");
+                return EventEat.EatGame;
             }
             return EventEat.EatNone;
         }
+
         #endregion
 
         #region MemoryEdit
