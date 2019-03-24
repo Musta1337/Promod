@@ -350,7 +350,7 @@ namespace Promod
 
         #region Commands
 
-        public override EventEat OnSay2(Entity player, string name, string message)
+        public override EventEat OnSay3(Entity player, ChatType type, string name, ref string message)
         {
             try
             {
