@@ -25,6 +25,7 @@ namespace Promod
             Call("setDvarifUninitialized", "sv_NESVDvar", "1");
             Call("setDvarifUninitialized", "sv_NERemoveAnnouncer", "1");
             Call("setDvarifUninitialized", "sv_NEAutoBalance", "1");
+            Call("setDvarifUninitialized", "sv_NEAliveCounter", "1");
             Log.Info("Dvars Initialized.");
             #endregion
 
@@ -155,21 +156,11 @@ namespace Promod
             {
                 if (weap.ToString() == "briefcase_bomb_mp")
                 {
-                    Parameter[] parameters = new Parameter[2]
-                    {
-                        Player.Origin,
-                        "mp_bomb_plant"
-                    };
-                    Call("PlaySoundAtPos", parameters);
+                    Call("PlaySoundAtPos", Player.Origin, "mp_bomb_plant");
                 }
                 else if (weap.ToString() == "briefcase_bomb_defuse_mp")
                 {
-                    Parameter[] parameters2 = new Parameter[2]
-                    {
-                        Player.Origin,
-                        "mp_bomb_defuse"
-                    };
-                    Call("PlaySoundAtPos", parameters2);
+                    Call("PlaySoundAtPos", Player.Origin, "mp_bomb_defuse");
                 }
             });
             player.SpawnedPlayer += () =>
@@ -189,6 +180,14 @@ namespace Promod
                     player.Call("SetWeaponAmmoClip", "flash_grenade_mp", 1);
                 }
             };
+            if (Call<int>("getDvarInt", "sv_NEAliveCounter") != 0)
+            {
+                OnInterval(500, () =>
+                {
+                    if (player.IsAlive) { alivecounter(player); return false; }
+                    return true;
+                });
+            }
         }
 
         public void OnPlayerConnecting(Entity player)
@@ -611,6 +610,142 @@ namespace Promod
             }
             return EventEat.EatNone;
         }
+
+
+        public void alivecounter(Entity player)
+        {
+            HudElem hudAlliesLabel = HudElem.CreateFontString(player, "hudsmall", 0.6f);
+            hudAlliesLabel.SetPoint("DOWNRIGHT", "DOWNRIGHT", -19, 96);
+            hudAlliesLabel.SetText("^5Allies ^7: ");
+            hudAlliesLabel.Color = new Vector3(1.0f, 0.33984375f, 0.19921875f);
+            hudAlliesLabel.GlowColor = new Vector3(1f, 0.863f, 0.0f);
+            hudAlliesLabel.GlowAlpha = 1f;
+            hudAlliesLabel.Alpha = 1f;
+            hudAlliesLabel.HideWhenInMenu = true;
+
+            HudElem hudEnemiesLabel = HudElem.CreateFontString(player, "hudsmall", 0.6f);
+            hudEnemiesLabel.SetPoint("DOWNRIGHT", "DOWNRIGHT", -19, 114);
+            hudEnemiesLabel.SetText("^1Enemy ^7: ");
+            hudEnemiesLabel.HideWhenInMenu = false;
+            hudEnemiesLabel.Color = new Vector3(0.921875f, 0.4375f, 0.38671875f);
+            hudEnemiesLabel.GlowColor = new Vector3(1f, 0.255f, 0.212f);
+            hudEnemiesLabel.GlowAlpha = 1f;
+            hudEnemiesLabel.Alpha = 1f;
+            hudEnemiesLabel.HideWhenInMenu = true;
+
+            HudElem hudAliveCountEnemies = HudElem.CreateFontString(player, "hudsmall", 0.6f);
+            hudAliveCountEnemies.SetPoint("DOWNRIGHT", "DOWNRIGHT", -8, 115);
+            hudAliveCountEnemies.HideWhenInMenu = false;
+            hudAliveCountEnemies.GlowColor = new Vector3(1f, 0.1f, 0.5f);
+            hudAliveCountEnemies.GlowAlpha = 1f;
+            hudAliveCountEnemies.Alpha = 1f;
+            hudAliveCountEnemies.HideWhenInMenu = true;
+
+            HudElem hudAliveCountAllies = HudElem.CreateFontString(player, "hudsmall", 0.6f);
+            hudAliveCountAllies.SetPoint("DOWNRIGHT", "DOWNRIGHT", -9, 95);
+            hudAliveCountAllies.HideWhenInMenu = false;
+            hudAliveCountAllies.GlowColor = new Vector3(1f, 0.1f, 0.5f);
+            hudAliveCountAllies.GlowAlpha = 1f;
+            hudAliveCountAllies.Alpha = 1f;
+            hudAliveCountAllies.HideWhenInMenu = true;
+
+            OnInterval(500, () =>
+            {
+                if (SessionTeam(player) == "spectator")
+                {
+                    hudAliveCountAllies.Alpha = 0f;
+                    hudAliveCountEnemies.Alpha = 0f;
+                    hudAlliesLabel.Alpha = 0f;
+                    hudEnemiesLabel.Alpha = 0f;
+                    return false;
+                }
+
+                int aliveAxisCount = Call<int>("getteamplayersalive", "axis");
+                int aliveAlliesCount = Call<int>("getteamplayersalive", "allies");
+
+                string playerTeam = SessionTeam(player);
+                string axisValue = aliveAxisCount.ToString();
+                string alliesValue = aliveAlliesCount.ToString();
+
+
+                if (aliveAxisCount == 1)
+                {
+                    axisValue = "^1Last Alive : ^7" + GetPlayer("axis", true).Name;
+                }
+                if (aliveAlliesCount == 1)
+                {
+                    alliesValue = "^5Last Alive : ^7" + GetPlayer("allies", true).Name;
+                }
+
+                if (SessionTeam(player) == "axis")
+                {
+                    if (aliveAlliesCount == 1)
+                    {
+                        hudAliveCountEnemies.Font = "hudsmall";
+                        hudEnemiesLabel.Alpha = 0f;
+                    }
+                    else
+                    {
+                        hudAliveCountEnemies.Font = "hudbig";
+                        hudEnemiesLabel.Alpha = 1f;
+                    }
+
+                    if (aliveAxisCount == 1)
+                    {
+                        hudAliveCountAllies.Font = "hudsmall";
+                        hudAlliesLabel.Alpha = 0f;
+                    }
+                    else
+                    {
+                        hudAliveCountAllies.Font = "hudbig";
+                        hudAlliesLabel.Alpha = 1f;
+                    }
+
+                    hudAliveCountAllies.SetText(axisValue);
+                    hudAliveCountEnemies.SetText(alliesValue);
+                }
+                else if (SessionTeam(player) == "allies")
+                {
+                    if (aliveAlliesCount == 1) { hudAlliesLabel.Alpha = 0f; }
+                    else { hudAlliesLabel.Alpha = 1f; }
+
+                    if (aliveAxisCount == 1) { hudEnemiesLabel.Alpha = 0f; }
+                    else { hudEnemiesLabel.Alpha = 1f; }
+
+                    hudAliveCountAllies.SetText(alliesValue);
+                    hudAliveCountEnemies.SetText(axisValue);
+                }
+
+                return true;
+            });
+        }
+        public static string SessionTeam(Entity player)
+        {
+            return player.GetField<string>("sessionteam");
+        }
+        public Entity GetPlayer(string team, bool IsAlive)
+        {
+            List<Entity> chosenPlayers = new List<Entity>();
+
+            team = team.ToLowerInvariant();
+            if (team != "allies" && team != "axis")
+            {
+                Log.Error($"Invalid team: {team}. Using Axis.");
+                team = "axis";
+            }
+
+            foreach (Entity player in Players)
+            {
+                if (SessionTeam(player) != team) { continue; }
+                if (player.IsAlive != IsAlive) { continue; }
+
+                chosenPlayers.Add(player);
+            }
+
+            if (chosenPlayers.Count == 0) return null;
+            return chosenPlayers[rng.Next(chosenPlayers.Count)];
+        }
+        public static Random rng = new Random();
 
         #endregion
 

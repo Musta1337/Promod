@@ -13,3 +13,4 @@ C:\Users\musta\Documents\GitHub\Promod\Promod\obj\Debug\Promod.csproj.CoreCompil
 C:\Users\musta\Documents\GitHub\Promod\Promod\obj\Debug\Promod.csproj.CopyComplete
 C:\Users\musta\Documents\GitHub\Promod\Promod\obj\Debug\Promod.dll
 C:\Users\musta\Documents\GitHub\Promod\Promod\obj\Debug\Promod.pdb
+C:\Users\musta\Documents\GitHub\Promod\Promod\obj\Debug\Promod.csprojAssemblyReference.cache
