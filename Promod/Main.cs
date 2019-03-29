@@ -305,7 +305,6 @@ namespace Promod
                   {
                       SetTeam(list[index], "axis");
                   }
-                  Utilities.RawSayAll("^0[^1Promod^0]: ^:Teams has been balanced.");
               }
               else
               {
@@ -314,7 +313,6 @@ namespace Promod
                   {
                       SetTeam(list[index], "allies");
                   }
-                  Utilities.RawSayAll("^0[^1Promod^0]: ^:Teams has been balanced.");
               }
            }
            catch (Exception ex)
