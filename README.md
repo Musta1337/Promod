@@ -58,6 +58,9 @@ To configure the Promod script, do the following steps:
    
    //Enables Auto Balance.
    seta sv_NEAutoBalance "1"
+   
+   //Enables Alive Counter.
+   seta sv_NEAliveCounter "1"
    ////////////////////////////////////////////
    ```
 3. Save the config.
